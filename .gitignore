@@ -1,0 +1,8 @@
+bin/
+obj/
+.idea/
+.vs/
+BenchmarkDotNet.Artifacts/
+*.user
+DisasmoBin/
+*.coverage

@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp2.1;netcoreapp3.0;net461</TargetFrameworks>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>8.0</LangVersion>
+        <Nullable>enable</Nullable>
+
+        <PackageVersion>0.0.1</PackageVersion>
+        <VersionSuffix>alpha1</VersionSuffix>
+
+        <Title>HexMate</Title>
+        <Copyright>Copyright © Nicolas Portmann 2019</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Authors>Nicolas Portmann</Authors>
+        <Description>High-performance hex encoding and decoding for .NET</Description>
+        <PackageTags>hex</PackageTags>
+
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <NeutralLanguage>en-US</NeutralLanguage>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+        <DefineConstants>INTRINSICS;SPAN</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'netcoreapp2.1'">
+        <DefineConstants>SPAN</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' != 'netcoreapp3.0' ">
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>$(AssemblyName).Benchmarks</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19324-01" PrivateAssets="All" />
+    </ItemGroup>
+</Project>
