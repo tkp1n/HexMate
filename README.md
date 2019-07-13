@@ -1,6 +1,8 @@
 # Hex <--> Binary 
 ## Implementation of API Proposal for [dotnet/corefx#10013](https://github.com/dotnet/corefx/issues/10013)
 
+[![Build Status](https://dev.azure.com/ndportmann/HexMate/_apis/build/status/tkp1n.HexMate?branchName=master)](https://dev.azure.com/ndportmann/HexMate/_build/latest?definitionId=1&branchName=master)
+
 ### API Proposal
 
 ```csharp
