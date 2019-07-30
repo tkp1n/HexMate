@@ -23,4 +23,9 @@
     <ItemGroup>
         <ProjectReference Include="..\HexMate\HexMate.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <None Update="LargeText.txt" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="SmallText.txt" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
 </Project>
