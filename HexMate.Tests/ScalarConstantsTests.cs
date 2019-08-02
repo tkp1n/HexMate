@@ -1,6 +1,4 @@
-using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace HexMate.Tests
@@ -55,7 +53,11 @@ namespace HexMate.Tests
 
             public override bool Equals(ushort x, ushort y)
             {
-                return x == BinaryPrimitives.ReverseEndianness(y);
+                var lo = y & 0xFF;
+                var hi = y >> 8;
+
+                var be = lo << 8 | hi;
+                return x == be;
             }
 
             public override int GetHashCode(ushort obj)
@@ -72,7 +74,11 @@ namespace HexMate.Tests
 
             public override bool Equals(uint x, uint y)
             {
-                return x == BinaryPrimitives.ReverseEndianness(y);
+                var lo = y & 0xFFFF;
+                var hi = y >> 16;
+
+                var be = lo << 16 | hi;
+                return x == be;
             }
 
             public override int GetHashCode(uint obj)
