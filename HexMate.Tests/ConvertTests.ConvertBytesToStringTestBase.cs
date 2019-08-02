@@ -63,7 +63,8 @@ namespace HexMate.Tests
                     var newResult = new StringBuilder();
                     for (var i = 0; i < result.Length; i += insertLineBreaksEvery)
                     {
-                        newResult.AppendLine(result.Substring(i, Math.Min(insertLineBreaksEvery, result.Length - i)));
+                        newResult.Append(result.Substring(i, Math.Min(insertLineBreaksEvery, result.Length - i)));
+                        newResult.Append("\r\n"); // Convert does not add platform-specific new-lines
                     }
 
                     result = newResult.ToString().TrimEnd();

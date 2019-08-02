@@ -20,6 +20,10 @@
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
     </ItemGroup>
 
+    <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp2.1' AND '$(TargetFramework)' != 'netcoreapp3.0'">
+        <PackageReference Include="System.Memory" Version="4.5.3"/>
+    </ItemGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\HexMate\HexMate.csproj" />
     </ItemGroup>

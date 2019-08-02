@@ -6,9 +6,9 @@ pool:
 
 steps:
 - task: DotNetCoreInstaller@0
-  displayName: 'Use .NET Core SDK 3.0.100 - preview 6'
+  displayName: 'Use .NET Core SDK 3.0.100 - preview 7'
   inputs:
-    version: '3.0.100-preview6-012264'
+    version: '3.0.100-preview7-012821'
 
 - script: dotnet restore
 
