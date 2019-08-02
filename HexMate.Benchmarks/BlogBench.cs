@@ -11,7 +11,7 @@ namespace HexMate.Benchmarks
         private byte[] data;
         private char[] res;
 
-        [Params(32, 64, 128, 256, 512, 1024 * 1024, 10 * 1024 * 1024)]
+        [Params(32, 64, 128, 256, 512, 1024, 2048, 4096, 1024 * 1024)]
         public int DataSize { get; set; }
 
         [GlobalSetup]
