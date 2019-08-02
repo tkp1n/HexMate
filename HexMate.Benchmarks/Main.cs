@@ -95,6 +95,7 @@ namespace HexMate.Benchmarks
             _outChars = BitConverter.ToString(_inBytes).Replace("-", string.Empty).Substring(0, DataSize).ToCharArray();
         }
 
+#if SPAN
         [Benchmark]
         public void EncodeUtf8()
             => Hex.EncodeToUtf8(_inBytes, _outBytes , out _, out _);
@@ -110,5 +111,6 @@ namespace HexMate.Benchmarks
         [Benchmark]
         public void DecodeUtf16()
             => Convert.TryFromHexChars(_outChars, _inBytes, out _);
+#endif
     }
 }

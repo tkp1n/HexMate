@@ -1,6 +1,9 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+#if REMOTING
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+#endif
 using System.Text;
 using BenchmarkDotNet.Attributes;
 
@@ -9,9 +12,8 @@ namespace HexMate.Benchmarks
     public unsafe class BlogBench
     {
         private byte[] data;
-        private char[] res;
 
-        [Params(32, 64, 128, 256, 512, 1024, 2048, 4096, 1024 * 1024)]
+        [Params(32, 4096, 1048576)]
         public int DataSize { get; set; }
 
         [GlobalSetup]
@@ -19,30 +21,21 @@ namespace HexMate.Benchmarks
         {
             data = new byte[DataSize];
             new Random(42).NextBytes(data);
-
-            res = new char[data.Length * 2];
         }
 
         [Benchmark]
-        public int HexMate()
-        {
-            var bytes = data;
-            return Convert.ToHexCharArray(bytes, 0, bytes.Length, res, 0, HexFormattingOptions.None);
-        }
-
-        //[Benchmark]
         public string ByteArrayToHexStringViaStringJoinArrayConvertAll()
             => string.Join(string.Empty, Array.ConvertAll(data, b => b.ToString("X2")));
 
-        //[Benchmark]
+        [Benchmark]
         public string ByteArrayToHexStringViaStringConcatArrayConvertAll()
             => string.Concat(Array.ConvertAll(data, b => b.ToString("X2")));
 
-        //[Benchmark]
+        [Benchmark]
         public string ByteArrayToHexStringViaBitConverter()
             => BitConverter.ToString(data).Replace("-", "");
 
-        //[Benchmark]
+        [Benchmark]
         public string ByteArrayToHexStringViaStringBuilderAggregateByteToString()
         {
             var bytes = data;
@@ -50,7 +43,7 @@ namespace HexMate.Benchmarks
                 .ToString();
         }
 
-        //[Benchmark]
+        [Benchmark]
         public string ByteArrayToHexStringViaStringBuilderForEachByteToString()
         {
             var bytes = data;
@@ -60,7 +53,7 @@ namespace HexMate.Benchmarks
             return hex.ToString();
         }
 
-        //[Benchmark]
+        [Benchmark]
         public string ByteArrayToHexStringViaStringBuilderAggregateAppendFormat()
         {
             var bytes = data;
@@ -68,7 +61,7 @@ namespace HexMate.Benchmarks
                 .ToString();
         }
 
-        //[Benchmark]
+        [Benchmark]
         public string ByteArrayToHexStringViaStringBuilderForEachAppendFormat()
         {
             var bytes = data;
@@ -78,7 +71,7 @@ namespace HexMate.Benchmarks
             return hex.ToString();
         }
 
-        //[Benchmark]
+        [Benchmark]
         public string ByteArrayToHexViaByteManipulation()
         {
             var bytes = data;
@@ -93,7 +86,7 @@ namespace HexMate.Benchmarks
             return new string(c);
         }
 
-        //[Benchmark]
+        [Benchmark]
         public string ByteArrayToHexViaByteManipulation2()
         {
             var bytes = data;
@@ -108,16 +101,18 @@ namespace HexMate.Benchmarks
             return new string(c);
         }
 
-#if !NETCOREAPP
+#if REMOTING
         [Benchmark]
-        public string ByteArrayToHexViaSoapHexBinary(byte[] bytes) {
+        public string ByteArrayToHexViaSoapHexBinary()
+        {
+            var bytes = data;
             SoapHexBinary soapHexBinary = new SoapHexBinary(bytes);
             return soapHexBinary.ToString();
         }
 #endif
 
         const string hexAlphabet = "0123456789ABCDEF";
-        //[Benchmark]
+        [Benchmark]
         public string ByteArrayToHexViaLookupAndShift()
         {
             var bytes = data;
@@ -133,7 +128,7 @@ namespace HexMate.Benchmarks
             string s = i.ToString("X2");
             return ((uint)s[0]) + ((uint)s[1] << 16);
         }).ToArray();
-        //[Benchmark]
+        [Benchmark]
         public string ByteArrayToHexViaLookupPerByte()
         {
             var bytes = data;
@@ -148,7 +143,7 @@ namespace HexMate.Benchmarks
 
         // { "00", "01", ..., "0E", "0F", "10", "11", ..., "FE", "FF" }
         static readonly string[] hexStringTable = hexAlphabet.SelectMany(n1 => hexAlphabet.Select(n2 => new string(new[] { n1, n2 }))).ToArray();
-        //[Benchmark]
+        [Benchmark]
         public string ByteArrayToHexViaLookup()
         {
             var bytes = data;
@@ -159,13 +154,20 @@ namespace HexMate.Benchmarks
             return result.ToString();
         }
 
-        static readonly uint* _lookup32UnsafeP = (uint*)GCHandle.Alloc(_Lookup32, GCHandleType.Pinned).AddrOfPinnedObject();
+        static uint[] _Lookup32LeBe = Enumerable.Range(0, 256).Select(i => {
+            string s = i.ToString("X2");
+            if(BitConverter.IsLittleEndian)
+                return ((uint)s[0]) + ((uint)s[1] << 16);
+            else
+                return ((uint)s[1]) + ((uint)s[0] << 16);
+        }).ToArray();
+        static readonly uint* _lookup32UnsafeP = (uint*)GCHandle.Alloc(_Lookup32LeBe, GCHandleType.Pinned).AddrOfPinnedObject();
         [Benchmark]
-        public char ByteArrayToHexViaLookup32UnsafeDirect()
+        public string ByteArrayToHexViaLookup32UnsafeDirect()
         {
             var bytes = data;
             var lookupP = _lookup32UnsafeP;
-            var result = res;
+            var result = new string((char)0, bytes.Length * 2);
             fixed (byte* bytesP = bytes)
             fixed (char* resultP = result) {
                 uint* resultP2 = (uint*)resultP;
@@ -174,7 +176,13 @@ namespace HexMate.Benchmarks
                 }
             }
 
-            return result[0];
+            return result;
+        }
+
+        [Benchmark]
+        public string HexMate()
+        {
+            return Convert.ToHexString(data);
         }
     }
 }

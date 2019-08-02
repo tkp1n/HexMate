@@ -2,18 +2,21 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFrameworks>netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFrameworks>netcoreapp2.1;netcoreapp3.0;net461</TargetFrameworks>
         <Optimize>true</Optimize>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+    <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0' ">
         <DefineConstants>INTRINSICS;SPAN</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'netcoreapp2.1'">
         <DefineConstants>SPAN</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
+        <DefineConstants>REMOTING</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,10 +25,5 @@
 
     <ItemGroup>
         <ProjectReference Include="..\HexMate\HexMate.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Update="LargeText.txt" CopyToOutputDirectory="PreserveNewest" />
-        <None Update="SmallText.txt" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>
