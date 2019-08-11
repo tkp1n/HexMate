@@ -5,8 +5,7 @@
         <LangVersion>8.0</LangVersion>
         <Nullable>enable</Nullable>
 
-        <PackageVersion>0.0.1</PackageVersion>
-        <VersionSuffix>alpha1</VersionSuffix>
+        <PackageVersion>0.0.2</PackageVersion>
 
         <Title>HexMate</Title>
         <Copyright>Copyright © Nicolas Portmann 2019</Copyright>
