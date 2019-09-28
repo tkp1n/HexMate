@@ -23,4 +23,5 @@ steps:
   displayName: Test
   inputs:
     command: test
+    arguments: '-f netcoreapp3.0'
     projects: '**/*Tests/*.csproj'
