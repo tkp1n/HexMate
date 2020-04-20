@@ -2,13 +2,13 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFrameworks>netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;netcoreapp5.0</TargetFrameworks>
+        <TargetFramework>netcoreapp5.0</TargetFramework>
         <Optimize>true</Optimize>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'netcoreapp3.1' ">
         <DefineConstants>INTRINSICS;SPAN</DefineConstants>
     </PropertyGroup>
 
@@ -17,7 +17,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
+        <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
     </ItemGroup>
 
     <ItemGroup>

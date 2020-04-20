@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Jobs;
 
 namespace HexMate.Benchmarks
@@ -62,21 +63,13 @@ namespace HexMate.Benchmarks
 
             public ConfigWithCustomEnvVars()
             {
-                Add(Job.Core
-                    .With(AllEnabled)
-                    .WithId("AVX2"));
-                Add(Job.Core
-                    .With(NoAvx2)
-                    .WithId("SSE4.1"));
-                Add(Job.Core
-                    .With(NoSse41)
-                    .WithId("SSSE3"));
-                Add(Job.Core
-                    .With(NoSsse3)
-                    .WithId("SSE2"));
-                Add(Job.Core
-                    .With(NoSse2)
-                    .WithId("Scalar"));
+                AddJob(
+                    Job.Default.WithEnvironmentVariables(AllEnabled).WithId("AVX2"),
+                    Job.Default.WithEnvironmentVariables(NoAvx2).WithId("SSE4.1"),
+                    Job.Default.WithEnvironmentVariables(NoSse41).WithId("SSSE3"),
+                    Job.Default.WithEnvironmentVariables(NoSsse3).WithId("SSE2"),
+                    Job.Default.WithEnvironmentVariables(NoSse2).WithId("Scalar")
+                );
             }
         }
 
