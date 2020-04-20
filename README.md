@@ -1,7 +1,6 @@
 # Hex <--> Binary 
-## Implementation of API Proposal for [dotnet/corefx#10013](https://github.com/dotnet/corefx/issues/10013)
 
-[![Build Status](https://dev.azure.com/ndportmann/HexMate/_apis/build/status/tkp1n.HexMate?branchName=master)](https://dev.azure.com/ndportmann/HexMate/_build/latest?definitionId=1&branchName=master)
+## Implementation of API Proposal for [dotnet/runtime#17837](https://github.com/dotnet/runtime/issues/17837)
 
 ### API Proposal
 
@@ -58,48 +57,58 @@ namespace System.Buffers.Text
 
 ### Performance characteristics
 
-| Method      | Job    | DataSize | Mean        | Error      | StdDev     | 
-|-------------|--------|----------|-------------|------------|------------| 
-| DecodeUtf16 | AVX2   | 32       | 33.13 ns    | 0.6630 ns  | 0.6511 ns  | 
-| DecodeUtf16 | SSE4.1 | 32       | 34.02 ns    | 0.7083 ns  | 0.6625 ns  | 
-| DecodeUtf16 | SSSE3  | 32       | 37.03 ns    | 0.7644 ns  | 0.7850 ns  | 
-| DecodeUtf16 | SSE2   | 32       | 43.49 ns    | 0.8232 ns  | 0.7701 ns  | 
-| DecodeUtf16 | Scalar | 32       | 46.71 ns    | 0.8503 ns  | 0.7954 ns  | 
-|             |        |          |             |            |            | 
-| DecodeUtf16 | AVX2   | 2048     | 219.62 ns   | 3.4391 ns  | 3.2169 ns  | 
-| DecodeUtf16 | SSE4.1 | 2048     | 396.82 ns   | 2.0316 ns  | 1.5861 ns  | 
-| DecodeUtf16 | SSSE3  | 2048     | 438.41 ns   | 8.6944 ns  | 8.5391 ns  | 
-| DecodeUtf16 | SSE2   | 2048     | 572.23 ns   | 11.0704 ns | 10.3553 ns | 
-| DecodeUtf16 | Scalar | 2048     | 1,935.50 ns | 35.5806 ns | 33.2821 ns | 
-|             |        |          |             |            |            | 
-| EncodeUtf16 | AVX2   | 32       | 14.31 ns    | 0.3031 ns  | 0.2836 ns  | 
-| EncodeUtf16 | SSSE3  | 32       | 14.12 ns    | 0.2935 ns  | 0.2745 ns  | 
-| EncodeUtf16 | SSE2   | 32       | 14.21 ns    | 0.3023 ns  | 0.3105 ns  | 
-| EncodeUtf16 | Scalar | 32       | 14.06 ns    | 0.2855 ns  | 0.2670 ns  | 
-|             |        |          |             |            |            | 
-| EncodeUtf16 | AVX2   | 2048     | 14.12 ns    | 0.3073 ns  | 0.2875 ns  | 
-| EncodeUtf16 | SSSE3  | 2048     | 13.80 ns    | 0.3083 ns  | 0.3028 ns  | 
-| EncodeUtf16 | SSE2   | 2048     | 13.95 ns    | 0.2076 ns  | 0.1942 ns  | 
-| EncodeUtf16 | Scalar | 2048     | 13.91 ns    | 0.2728 ns  | 0.2552 ns  | 
-|             |        |          |             |            |            | 
-| DecodeUtf8  | AVX2   | 32       | 28.73 ns    | 0.5997 ns  | 1.1117 ns  | 
-| DecodeUtf8  | SSE4.1 | 32       | 25.65 ns    | 0.4005 ns  | 0.3746 ns  | 
-| DecodeUtf8  | SSSE3  | 32       | 26.23 ns    | 0.4507 ns  | 0.4215 ns  | 
-| DecodeUtf8  | SSE2   | 32       | 32.38 ns    | 0.6531 ns  | 0.6109 ns  | 
-| DecodeUtf8  | Scalar | 32       | 42.46 ns    | 0.8818 ns  | 0.8660 ns  | 
-|             |        |          |             |            |            | 
-| DecodeUtf8  | AVX2   | 2048     | 163.69 ns   | 3.2454 ns  | 3.4726 ns  | 
-| DecodeUtf8  | SSE4.1 | 2048     | 342.94 ns   | 6.5188 ns  | 5.7788 ns  | 
-| DecodeUtf8  | SSSE3  | 2048     | 390.88 ns   | 7.7759 ns  | 7.2736 ns  | 
-| DecodeUtf8  | SSE2   | 2048     | 514.38 ns   | 8.9631 ns  | 8.3840 ns  | 
-| DecodeUtf8  | Scalar | 2048     | 1,902.77 ns | 37.6761 ns | 44.8507 ns | 
-|             |        |          |             |            |            | 
-| EncodeUtf8  | AVX2   | 32       | 18.61 ns    | 0.3902 ns  | 0.3650 ns  | 
-| EncodeUtf8  | SSSE3  | 32       | 18.64 ns    | 0.4056 ns  | 0.3794 ns  | 
-| EncodeUtf8  | SSE2   | 32       | 21.24 ns    | 0.4344 ns  | 0.4266 ns  | 
-| EncodeUtf8  | Scalar | 32       | 28.89 ns    | 0.5113 ns  | 0.4782 ns  | 
-|             |        |          |             |            |            | 
-| EncodeUtf8  | AVX2   | 2048     | 72.08 ns    | 1.4621 ns  | 1.2961 ns  | 
-| EncodeUtf8  | SSSE3  | 2048     | 108.16 ns   | 2.1941 ns  | 2.0523 ns  | 
-| EncodeUtf8  | SSE2   | 2048     | 139.82 ns   | 2.7601 ns  | 2.8344 ns  | 
-| EncodeUtf8  | Scalar | 2048     | 660.42 ns   | 13.1854 ns | 14.1082 ns | 
+```
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19041.207 (2004/?/20H1)
+Intel Core i7-9750H CPU 2.60GHz, 1 CPU, 12 logical and 6 physical cores
+.NET Core SDK=5.0.100-preview.2.20176.6
+```
+
+| Method      | Job    | DataSize | Mean         | Error      | StdDev     | 
+|-------------|--------|----------|--------------|------------|------------| 
+| DecodeUtf16 | AVX2   | 32       | 18.535 ns    | 0.0736 ns  | 0.0615 ns  | 
+| DecodeUtf16 | SSE2   | 32       | 28.495 ns    | 0.5772 ns  | 0.6647 ns  | 
+| DecodeUtf16 | SSE4.1 | 32       | 22.267 ns    | 0.4771 ns  | 0.7568 ns  | 
+| DecodeUtf16 | SSSE3  | 32       | 22.629 ns    | 0.1030 ns  | 0.0860 ns  | 
+| DecodeUtf16 | Scalar | 32       | 36.456 ns    | 0.2476 ns  | 0.2316 ns  | 
+|             |        |          |              |            |            | 
+| DecodeUtf16 | AVX2   | 2048     | 147.228 ns   | 0.7159 ns  | 0.5978 ns  | 
+| DecodeUtf16 | SSE2   | 2048     | 413.381 ns   | 1.5861 ns  | 1.4836 ns  | 
+| DecodeUtf16 | SSE4.1 | 2048     | 295.134 ns   | 5.8257 ns  | 5.1644 ns  | 
+| DecodeUtf16 | SSSE3  | 2048     | 319.053 ns   | 2.6398 ns  | 2.3401 ns  | 
+| DecodeUtf16 | Scalar | 2048     | 1,913.189 ns | 11.4772 ns | 10.7358 ns |
+|             |        |          |              |            |            |  
+| DecodeUtf8  | AVX2   | 32       | 14.601 ns    | 0.1075 ns  | 0.0897 ns  | 
+| DecodeUtf8  | SSE2   | 32       | 17.503 ns    | 0.3222 ns  | 0.3013 ns  | 
+| DecodeUtf8  | SSE4.1 | 32       | 13.611 ns    | 0.0723 ns  | 0.0641 ns  | 
+| DecodeUtf8  | SSSE3  | 32       | 13.762 ns    | 0.2694 ns  | 0.2520 ns  | 
+| DecodeUtf8  | Scalar | 32       | 22.227 ns    | 0.1324 ns  | 0.1239 ns  |
+|             |        |          |              |            |            |  
+| DecodeUtf8  | AVX2   | 2048     | 112.673 ns   | 0.5130 ns  | 0.4799 ns  | 
+| DecodeUtf8  | SSE2   | 2048     | 371.773 ns   | 1.4891 ns  | 1.2434 ns  | 
+| DecodeUtf8  | SSE4.1 | 2048     | 247.388 ns   | 2.9746 ns  | 2.4839 ns  | 
+| DecodeUtf8  | SSSE3  | 2048     | 278.068 ns   | 1.3503 ns  | 1.1276 ns  | 
+| DecodeUtf8  | Scalar | 2048     | 1,197.137 ns | 4.7857 ns  | 4.4765 ns  |
+|             |        |          |              |            |            |  
+| EncodeUtf16 | AVX2   | 32       | 5.391 ns     | 0.0482 ns  | 0.0403 ns  | 
+| EncodeUtf16 | SSE2   | 32       | 5.656 ns     | 0.0372 ns  | 0.0348 ns  | 
+| EncodeUtf16 | SSE4.1 | 32       | 5.553 ns     | 0.0556 ns  | 0.0464 ns  | 
+| EncodeUtf16 | SSSE3  | 32       | 5.608 ns     | 0.1093 ns  | 0.1301 ns  | 
+| EncodeUtf16 | Scalar | 32       | 5.675 ns     | 0.0409 ns  | 0.0363 ns  |
+|             |        |          |              |            |            |  
+| EncodeUtf16 | AVX2   | 2048     | 5.403 ns     | 0.0431 ns  | 0.0337 ns  | 
+| EncodeUtf16 | SSE2   | 2048     | 5.500 ns     | 0.0299 ns  | 0.0279 ns  | 
+| EncodeUtf16 | SSE4.1 | 2048     | 5.300 ns     | 0.0326 ns  | 0.0305 ns  | 
+| EncodeUtf16 | SSSE3  | 2048     | 5.313 ns     | 0.0171 ns  | 0.0151 ns  | 
+| EncodeUtf16 | Scalar | 2048     | 5.372 ns     | 0.0287 ns  | 0.0254 ns  |
+|             |        |          |              |            |            |  
+| EncodeUtf8  | AVX2   | 32       | 8.222 ns     | 0.0639 ns  | 0.0598 ns  | 
+| EncodeUtf8  | SSE2   | 32       | 9.779 ns     | 0.0476 ns  | 0.0397 ns  | 
+| EncodeUtf8  | SSE4.1 | 32       | 7.681 ns     | 0.0730 ns  | 0.0683 ns  | 
+| EncodeUtf8  | SSSE3  | 32       | 7.763 ns     | 0.0984 ns  | 0.0821 ns  | 
+| EncodeUtf8  | Scalar | 32       | 23.286 ns    | 0.1478 ns  | 0.1234 ns  |
+|             |        |          |              |            |            |  
+| EncodeUtf8  | AVX2   | 2048     | 50.853 ns    | 0.4674 ns  | 0.3903 ns  | 
+| EncodeUtf8  | SSE2   | 2048     | 98.637 ns    | 0.5082 ns  | 0.4505 ns  | 
+| EncodeUtf8  | SSE4.1 | 2048     | 65.998 ns    | 0.3181 ns  | 0.2820 ns  | 
+| EncodeUtf8  | SSSE3  | 2048     | 73.602 ns    | 0.4883 ns  | 0.4329 ns  | 
+| EncodeUtf8  | Scalar | 2048     | 487.154 ns   | 1.9383 ns  | 1.8131 ns  | 
