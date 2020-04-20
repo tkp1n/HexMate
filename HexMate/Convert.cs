@@ -44,7 +44,12 @@ namespace HexMate
                 fixed (char* sIn = inArray)
                 {
                     var input = sIn + offset;
-                    var result = new byte[FromHex_ComputeResultLength(input, length)];
+                    var resultLength = FromHex_ComputeResultLength(input, length);
+#if GC_ALLOC_UNINIT
+                    var result = GC.AllocateUninitializedArray<byte>(resultLength);
+#else
+                    var result = new byte[resultLength];
+#endif
                     fixed (byte* outPtr = result)
                     {
                         var res = ConvertFromHexArray(outPtr, result.Length, input, length);
@@ -77,7 +82,12 @@ namespace HexMate
             {
                 fixed (char* inPtr = s)
                 {
-                    var result = new byte[FromHex_ComputeResultLength(inPtr, s.Length)];
+                    var resultLength = FromHex_ComputeResultLength(inPtr, s.Length);
+#if GC_ALLOC_UNINIT
+                    var result = GC.AllocateUninitializedArray<byte>(resultLength);
+#else
+                    var result = new byte[resultLength];
+#endif
                     fixed (byte* outPtr = result)
                     {
                         var res = ConvertFromHexArray(outPtr, result.Length, inPtr, s.Length);
@@ -229,7 +239,12 @@ namespace HexMate
             {
                 fixed (char* inPtr = &MemoryMarshal.GetReference(chars))
                 {
-                    var result = new byte[FromHex_ComputeResultLength(inPtr, chars.Length)];
+                    var resultLength = FromHex_ComputeResultLength(inPtr, chars.Length);
+#if GC_ALLOC_UNINIT
+                    var result = GC.AllocateUninitializedArray<byte>(resultLength);
+#else
+                    var result = new byte[resultLength];
+#endif
                     fixed (byte* outPtr = result)
                     {
                         var res = ConvertFromHexArray(outPtr, result.Length, inPtr, chars.Length);
