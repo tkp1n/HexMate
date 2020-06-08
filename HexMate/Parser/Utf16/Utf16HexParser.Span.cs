@@ -17,30 +17,30 @@ namespace HexMate
                 var srcTarget = src + srcLength;
                 var destTarget = dest + destLength;
 
-                byte hi, lo;
+                int hi, lo;
                 while (srcTarget > src && destTarget > dest)
                 {
                 ReadHi:
                     int valHi = *src++;
                     if (valHi > 0xFF) { goto Err;}
-                    hi = LookupUpperLowerHi[valHi];
+                    hi = LookupUpperLower[valHi];
                     if (hi >= 0xFE)
                     {
                         if (hi == 0xFF) goto Err;
                         if (srcTarget > src) goto ReadHi;
                     }
-                    *dest |= hi;
+                    *dest |= (byte) (hi << 4);
 
                 ReadLo:
                     int valLo = *src++;
                     if (valLo > 0xFF) goto Err;
-                    lo = LookupUpperLowerLo[valLo];
+                    lo = LookupUpperLower[valLo];
                     if (lo >= 0xFE)
                     {
                         if (lo == 0xFF) goto Err;
                         if (srcTarget > src) goto ReadLo;
                     }
-                    *dest |= lo;
+                    *dest |= (byte)  lo;
 
                     dest++;
                 }
@@ -49,7 +49,7 @@ namespace HexMate
                 destBytes = dest;
                 return true;
 
-            Err:
+                Err:
                 srcBytes = src - 1;
                 destBytes = dest;
                 return false;

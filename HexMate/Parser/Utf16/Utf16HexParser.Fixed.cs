@@ -16,33 +16,32 @@ namespace HexMate
                 var srcTarget = src + srcLength;
                 var destTarget = dest + destLength;
 
-                fixed (byte* lutHi = LookupUpperLowerHi)
-                fixed (byte* lutLo = LookupUpperLowerLo)
+                fixed (byte* lut = LookupUpperLower)
                 {
-                    byte hi, lo;
+                    int hi, lo;
                     while (srcTarget > src && destTarget > dest)
                     {
                     ReadHi:
                         int valHi = *src++;
                         if (valHi > 0xFF) { goto Err;}
-                        hi = lutHi[valHi];
+                        hi = lut[valHi];
                         if (hi >= 0xFE)
                         {
                             if (hi == 0xFF) goto Err;
                             if (srcTarget > src) goto ReadHi; // skip whitespace
                         }
-                        *dest |= hi;
+                        *dest |= (byte) (hi << 4);
 
                     ReadLo:
                         int valLo = *src++;
                         if (valLo > 0xFF) goto Err;
-                        lo = lutLo[valLo];
+                        lo = lut[valLo];
                         if (lo >= 0xFE)
                         {
                             if (lo == 0xFF) goto Err;
                             if (srcTarget > src) goto ReadLo; // skip whitespace
                         }
-                        *dest |= lo;
+                        *dest |= (byte) lo;
 
                         dest++;
                     }
