@@ -1,5 +1,6 @@
 #if SPAN
 using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using static HexMate.ScalarConstants;
@@ -17,30 +18,35 @@ namespace HexMate
                 var dest = destBytes;
 
                 var target = dest + destLength;
+                int hi, lo;
                 while (dest != target)
                 {
-                    var hi = Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(LookupUpperLowerHi), (IntPtr)(*src++));
-                    var lo = Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(LookupUpperLowerLo), (IntPtr)(*src++));
+                    hi = Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(LookupUpperLower), (IntPtr)(*src++));
+                    lo = Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(LookupUpperLower), (IntPtr)(*src++));
 
-                    if (hi >= 0xFE) goto HiErr;
-                    if (lo >= 0xFE) goto LoErr;
+                    if ((hi | lo) >= 0xFE) goto Err;
 
-                    *dest++ = (byte) (hi | lo);
+                    *dest++ = (byte) ((hi << 4) | lo);
                 }
 
                 srcBytes = src;
                 destBytes = dest;
                 return true;
 
-            HiErr:
-                srcBytes = src - 2;
-                destBytes = dest;
-                return false;
-
-            LoErr:
-                srcBytes = src - 1;
-                destBytes = dest;
-                return false;
+            Err:
+                if (hi >= 0xFE)
+                {
+                    srcBytes = src - 2;
+                    destBytes = dest;
+                    return false;
+                }
+                else
+                {
+                    Debug.Assert(lo >= 0xFE);
+                    srcBytes = src - 1;
+                    destBytes = dest;
+                    return false;
+                }
             }
         }
     }

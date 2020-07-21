@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using static HexMate.ScalarConstants;
 
@@ -15,18 +16,17 @@ namespace HexMate
 
                 var target = dest + destLength;
 
-                fixed (byte* lutHi = LookupUpperLowerHi)
-                fixed (byte* lutLo = LookupUpperLowerLo)
+                int hi, lo;
+                fixed (byte* lut = LookupUpperLower)
                 {
                     while (dest != target)
                     {
-                        var hi = lutHi[*src++];
-                        var lo = lutLo[*src++];
+                        hi = lut[*src++];
+                        lo = lut[*src++];
 
-                        if (hi >= 0xFE) goto HiErr;
-                        if (lo >= 0xFE) goto LoErr;
+                        if ((hi | lo) >= 0xFE) goto Err;
 
-                        *dest++ = (byte) (hi | lo);
+                        *dest++ = (byte) ((hi << 4) | lo);
                     }
                 }
 
@@ -34,15 +34,20 @@ namespace HexMate
                 destBytes = dest;
                 return true;
 
-            HiErr:
-                srcBytes = src - 2;
-                destBytes = dest;
-                return false;
-
-            LoErr:
-                srcBytes = src - 1;
-                destBytes = dest;
-                return false;
+                Err:
+                if (hi >= 0xFE)
+                {
+                    srcBytes = src - 2;
+                    destBytes = dest;
+                    return false;
+                }
+                else
+                {
+                    Debug.Assert(lo >= 0xFE);
+                    srcBytes = src - 1;
+                    destBytes = dest;
+                    return false;
+                }
             }
         }
     }
