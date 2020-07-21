@@ -3,7 +3,7 @@ using System;
 
 namespace HexMate
 {
-    internal static class Vector128Constants
+    internal static class VectorConstants
     {
         // Formatter
 

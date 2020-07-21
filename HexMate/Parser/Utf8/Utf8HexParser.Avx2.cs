@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
 using static System.Runtime.Intrinsics.X86.Avx;
 using static System.Runtime.Intrinsics.X86.Avx2;
-using static HexMate.Vector256Constants;
+using static HexMate.VectorConstants;
 using static HexMate.VectorUtils;
 
 namespace HexMate

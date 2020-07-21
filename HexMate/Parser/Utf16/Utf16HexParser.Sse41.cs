@@ -5,7 +5,7 @@ using System.Runtime.Intrinsics;
 using static System.Runtime.Intrinsics.X86.Sse2;
 using static System.Runtime.Intrinsics.X86.Ssse3;
 using static System.Runtime.Intrinsics.X86.Sse41;
-using static HexMate.Vector128Constants;
+using static HexMate.VectorConstants;
 using static HexMate.VectorUtils;
 
 namespace HexMate
