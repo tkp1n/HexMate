@@ -17,7 +17,7 @@ namespace HexMate
                 Debug.Assert(System.Runtime.Intrinsics.X86.Avx2.IsSupported);
                 Debug.Assert(srcLength >= 32);
 
-                var x00 = Vector256.Create((byte) 0x00);
+                var x00 = Vector256<byte>.Zero;
                 var x0F = Vector256.Create((byte) 0x0F);
                 var lowerHexLookupTable = ReadVector256(s_lowerHexLookupTable);
                 var upperHexLookupTable = ReadVector256(s_upperHexLookupTable);

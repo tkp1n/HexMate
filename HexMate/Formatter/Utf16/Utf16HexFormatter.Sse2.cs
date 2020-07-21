@@ -14,7 +14,7 @@ namespace HexMate
                 Debug.Assert(System.Runtime.Intrinsics.X86.Sse2.IsSupported);
                 Debug.Assert(srcLength >= 16);
 
-                var x00 = Vector128.Create((byte) 0x00);
+                var x00 = Vector128<byte>.Zero;
                 var x0F = Vector128.Create((byte) 0x0F);
                 var x30 = Vector128.Create((byte) 0x30);
                 var x09 = Vector128.Create((byte) 0x09);
