@@ -29,6 +29,7 @@ namespace HexMate
                 var dest = destBytes;
 
                 var target = dest + FastMath.RoundDownTo32(destLength);
+                int leftOk, rightOk;
                 while (dest != target)
                 {
                     var inputLeft = LoadVector256(src);
@@ -76,11 +77,10 @@ namespace HexMate
                     var validationResultLeft = Or(errLeft, valueLeft);
                     var validationResultRight = Or(errRight, valueRight);
 
-                    var leftOk = MoveMask(validationResultLeft);
-                    var rightOk = MoveMask(validationResultRight);
+                    leftOk = MoveMask(validationResultLeft);
+                    rightOk = MoveMask(validationResultRight);
 
-                    if (leftOk != 0) goto LeftErr;
-                    if (rightOk != 0) goto RightErr;
+                    if ((leftOk | rightOk) != 0) goto Err;
 
                     Store(dest, result);
                     dest += 32;
@@ -90,15 +90,20 @@ namespace HexMate
                 destBytes = dest;
                 return true;
 
-            LeftErr:
-                srcBytes = src - 64;
-                destBytes = dest;
-                return false;
-
-            RightErr:
-                srcBytes = src - 32;
-                destBytes = dest;
-                return false;
+            Err:
+                if (leftOk != 0)
+                {
+                    srcBytes = src - 64;
+                    destBytes = dest;
+                    return false;
+                }
+                else
+                {
+                    Debug.Assert(rightOk != 0);
+                    srcBytes = src - 32;
+                    destBytes = dest;
+                    return false;
+                }
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

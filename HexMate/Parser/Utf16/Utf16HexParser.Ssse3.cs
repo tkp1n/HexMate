@@ -31,6 +31,7 @@ namespace HexMate
                 var dest = destBytes;
 
                 var target = dest + FastMath.RoundDownTo16(destLength);
+                int leftOk, rightOk;
                 while (dest != target)
                 {
                     var a = LoadVector128(src).AsInt16();
@@ -93,11 +94,10 @@ namespace HexMate
 
                     var result = UnpackLow(evenBytesLeft.AsInt64(), evenBytesRight.AsInt64()).AsByte();
 
-                    var leftOk = MoveMask(validLeft);
-                    var rightOk = MoveMask(validRight);
+                    leftOk = MoveMask(validLeft);
+                    rightOk = MoveMask(validRight);
 
-                    if (leftOk != 0xFFFF) goto LeftErr;
-                    if (rightOk != 0xFFFF) goto RightErr;
+                    if ((leftOk & rightOk) != 0xFFFF) goto Err;
 
                     Store(dest, result);
                     dest += 16;
@@ -107,15 +107,21 @@ namespace HexMate
                 destBytes = dest;
                 return true;
 
-            LeftErr:
-                srcBytes = (char*) (src - 64);
-                destBytes = dest;
-                return false;
 
-            RightErr:
-                srcBytes = (char*) (src - 32);
-                destBytes = dest;
-                return false;
+            Err:
+                if (leftOk != 0xFFFF)
+                {
+                    srcBytes = (char*) (src - 64);
+                    destBytes = dest;
+                    return false;
+                }
+                else
+                {
+                    Debug.Assert(rightOk != 0xFFFF);
+                    srcBytes = (char*) (src - 32);
+                    destBytes = dest;
+                    return false;
+                }
             }
         }
     }

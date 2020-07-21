@@ -1,6 +1,7 @@
 #if INTRINSICS
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
 using static System.Runtime.Intrinsics.X86.Avx;
 using static System.Runtime.Intrinsics.X86.Avx2;
@@ -29,6 +30,7 @@ namespace HexMate
                     var dest = destBytes;
 
                     var target = dest + FastMath.RoundDownTo32(destLength);
+                    int leftOk, rightOk;
                     while (dest != target)
                     {
                         var a = LoadVector256(src).AsInt16();
@@ -86,11 +88,10 @@ namespace HexMate
                         var validationResultLeft = Or(errLeft, valueLeft);
                         var validationResultRight = Or(errRight, valueRight);
 
-                        var leftOk = MoveMask(validationResultLeft);
-                        var rightOk = MoveMask(validationResultRight);
+                        leftOk = MoveMask(validationResultLeft);
+                        rightOk = MoveMask(validationResultRight);
 
-                        if (leftOk != 0) goto LeftErr;
-                        if (rightOk != 0) goto RightErr;
+                        if ((leftOk | rightOk) != 0) goto Err;
 
                         Store(dest, result);
                         dest += 32;
@@ -100,15 +101,20 @@ namespace HexMate
                     destBytes = dest;
                     return true;
 
-                LeftErr:
-                    srcBytes = (char*) (src - 128);
-                    destBytes = dest;
-                    return false;
-
-                RightErr:
-                    srcBytes = (char*) (src - 64);
-                    destBytes = dest;
-                    return false;
+                Err:
+                    if (leftOk != 0)
+                    {
+                        srcBytes = (char*) (src - 128);
+                        destBytes = dest;
+                        return false;
+                    }
+                    else
+                    {
+                        Debug.Assert(rightOk != 0);
+                        srcBytes = (char*) (src - 64);
+                        destBytes = dest;
+                        return false;
+                    }
                 }
 
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
