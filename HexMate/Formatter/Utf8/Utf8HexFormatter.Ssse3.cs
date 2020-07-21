@@ -18,8 +18,8 @@ namespace HexMate
                 Debug.Assert(srcLength >= 16);
 
                 var x0F = Vector128.Create((byte) 0x0F);
-                var lowerHexLookupTable = ReadVector<Vector128<byte>>(s_lowerHexLookupTable);
-                var upperHexLookupTable = ReadVector<Vector128<byte>>(s_upperHexLookupTable);
+                var lowerHexLookupTable = ReadVector128(s_lowerHexLookupTable);
+                var upperHexLookupTable = ReadVector128(s_upperHexLookupTable);
                 var hexLookupTable = toLower ? lowerHexLookupTable : upperHexLookupTable;
 
                 var src = srcBytes;

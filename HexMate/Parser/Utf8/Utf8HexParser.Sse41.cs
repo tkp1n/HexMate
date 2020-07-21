@@ -21,11 +21,11 @@ namespace HexMate
 
                 var x0F = Vector128.Create((byte) 0x0F);
                 var xF0 = Vector128.Create((byte) 0xF0);
-                var digHexSelector = ReadVector<Vector128<byte>>(s_upperLowerDigHexSelector);
-                var digits = ReadVector<Vector128<byte>>(s_digits);
-                var hexs = ReadVector<Vector128<byte>>(s_hexs);
-                var evenBytes = ReadVector<Vector128<byte>>(s_evenBytes);
-                var oddBytes = ReadVector<Vector128<byte>>(s_oddBytes);
+                var digHexSelector = ReadVector128(s_upperLowerDigHexSelector);
+                var digits = ReadVector128(s_digits);
+                var hexs = ReadVector128(s_hexs);
+                var evenBytes = ReadVector128(s_evenBytes);
+                var oddBytes = ReadVector128(s_oddBytes);
                 var src = srcBytes;
                 var dest = destBytes;
 

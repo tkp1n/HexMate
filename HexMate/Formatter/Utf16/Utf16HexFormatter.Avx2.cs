@@ -19,8 +19,8 @@ namespace HexMate
 
                 var x00 = Vector256.Create((byte) 0x00);
                 var x0F = Vector256.Create((byte) 0x0F);
-                var lowerHexLookupTable = ReadVector<Vector256<byte>>(s_lowerHexLookupTable);
-                var upperHexLookupTable = ReadVector<Vector256<byte>>(s_upperHexLookupTable);
+                var lowerHexLookupTable = ReadVector256(s_lowerHexLookupTable);
+                var upperHexLookupTable = ReadVector256(s_upperHexLookupTable);
                 var hexLookupTable = toLower ? lowerHexLookupTable : upperHexLookupTable;
 
                 var src = srcBytes;

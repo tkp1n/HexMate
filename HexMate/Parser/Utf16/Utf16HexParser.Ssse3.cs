@@ -23,10 +23,10 @@ namespace HexMate
                 var x40 = Vector128.Create((byte) 0x40);
                 var x60 = Vector128.Create((byte) 0x60);
                 var xF0 = Vector128.Create((byte) 0xF0);
-                var validDig = ReadVector<Vector128<byte>>(s_validDig);
-                var validHex = ReadVector<Vector128<byte>>(s_validHex);
-                var evenBytes = ReadVector<Vector128<byte>>(s_evenBytes);
-                var oddBytes = ReadVector<Vector128<byte>>(s_oddBytes);
+                var validDig = ReadVector128(s_validDig);
+                var validHex = ReadVector128(s_validHex);
+                var evenBytes = ReadVector128(s_evenBytes);
+                var oddBytes = ReadVector128(s_oddBytes);
                 var src = (byte*) srcBytes;
                 var dest = destBytes;
 
