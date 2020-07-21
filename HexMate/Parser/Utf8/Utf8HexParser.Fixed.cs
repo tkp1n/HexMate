@@ -34,7 +34,7 @@ namespace HexMate
                 destBytes = dest;
                 return true;
 
-                Err:
+            Err:
                 if (hi >= 0xFE)
                 {
                     srcBytes = src - 2;

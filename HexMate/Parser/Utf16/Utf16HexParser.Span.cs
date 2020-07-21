@@ -49,7 +49,7 @@ namespace HexMate
                 destBytes = dest;
                 return true;
 
-                Err:
+            Err:
                 srcBytes = src - 1;
                 destBytes = dest;
                 return false;
